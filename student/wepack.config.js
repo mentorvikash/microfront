@@ -3,19 +3,19 @@ const { ModuleFederationPlugin } = require('webpack').container
 const path = require('path')
 
 module.exports = {
-    entry: './scr/index',
+    entry: './src/index',
     devServer: {
         port: 3001,
         static: path.join(__dirname, 'dist'),
         open: false,
     },
-    output: { putblicPath: 'auto' },
+    output: { publicPath: 'auto' },
     module: {
         rules: [
             {
                 test: /\.jsx?$/,
                 loader: 'babel-loader',
-                exclude: 'node_moudles'
+                exclude: /node_modules/
             },
             {
                 test: /\.css$/,
@@ -23,7 +23,7 @@ module.exports = {
             }
         ]
     },
-    resolve: ['.js', 'jsx'],
+    resolve: { extensions: ['.js', '.jsx'] },
     plugins: [
         new ModuleFederationPlugin({
             name: 'student',
@@ -33,5 +33,4 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({ template: './public/index.html' })
     ]
-
 }

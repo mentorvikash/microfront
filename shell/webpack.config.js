@@ -1,9 +1,9 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const { ModulerFedrationPlugin } = require("webpack").container;
+const { ModuleFederationPlugin } = require("webpack").container;
 const path = require('path')
 
-moudle.export = {
-    entry: 'scr/index',
+module.exports = {
+    entry: './src/index.jsx',
     mode: 'development',
     devServer: {
         port: 3000,
@@ -22,7 +22,7 @@ moudle.export = {
     },
     resolve: { extensions: ['.js', '.jsx'] },
     plugins: [
-        new ModulerFedrationPlugin({
+        new ModuleFederationPlugin({
             name: 'shell',
             remotes: {
                 student: 'student@http://localhost:3001/remoteEntry.js',

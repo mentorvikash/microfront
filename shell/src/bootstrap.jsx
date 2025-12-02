@@ -2,8 +2,8 @@ import React, { Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import './style.css'
 
-import StudentApp = lazy(() => import('student/StudentApp'))
-import TeacherApp = lazy(() => import('teacher/TeacherApp'))
+const StudentApp = lazy(() => import('student/StudentApp'))
+const TeacherApp = lazy(() => import('teacher/TeacherApp'))
 
 
 function App() {

@@ -3,7 +3,7 @@ const { ModuleFederationPlugin } = require('webpack').container
 const path = require('path')
 
 module.exports = {
-    entry: './src/index',
+    entry: './scr/index',
     devServer: {
         port: 3001,
         static: path.join(__dirname, 'dist'),
@@ -28,9 +28,10 @@ module.exports = {
         new ModuleFederationPlugin({
             name: 'student',
             filename: 'remoteEntry.js',
-            exposes: { './StudentApp': './src/StudentApp' },
+            exposes: { './StudentApp': './scr/StudentApp' },
             shared: { react: { singleton: true }, 'react-dom': { singleton: true } }
         }),
         new HtmlWebpackPlugin({ template: './public/index.html' })
     ]
 }
+

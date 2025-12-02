@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function StudentApp() {
     const [notices, setNotices] = useState([])
     useEffect(() => {
-        fetch('http://localhost:3000/notice')
+        fetch('http://localhost:4001/notices')
             .then(res => res.json())
             .then(setNotices)
-            .catch(() => setNotice([{ title: 'No notice found' }]))
+            .catch(() => setNotices([{ title: 'No notice found' }]))
     }, [])
 
 

@@ -5,7 +5,7 @@ function TeacherApp() {
   useEffect(() => {
     fetch("http://localhost:4001/classes")
       .then(res => res.json())
-      .then(date => setClasses)
+      .then(setClasses)
       .catch(() => setClasses([{ name: "No backend" }]))
 
 

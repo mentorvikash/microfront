@@ -13,7 +13,7 @@ module.exports = {
     output: { publicPath: "auto" },
     module: {
         rules: [
-            { test: /\.jsx?$/, loader: "babel-loader", excludes: /node_modules/ },
+            { test: /\.jsx?$/, loader: "babel-loader", exclude: /node_modules/ },
             { test: /\.css$/, use: ["css-loader", "style-loader"] }
         ]
     },
@@ -23,8 +23,8 @@ module.exports = {
             name: "shared_ui",
             filename: "remoteEntry.js",
             exposes: {
-                "./Button": "./src/components/Button",
-                "./Card": "./src/components/Card"
+                "./Button": "./components/Button",
+                "./Card": "./components/Card"
             },
             shared: {
                 react: { singleton: true, requiredVersion: "^18.2.0" },

@@ -26,8 +26,8 @@ module.exports = {
             name: 'shell',
             remotes: {
                 student: 'student@http://localhost:3001/remoteEntry.js',
-                teacher: 'teacher@http://localhost:3002/remoteEntry.js'
-
+                teacher: 'teacher@http://localhost:3002/remoteEntry.js',
+                shared_ui: "shared_ui@http://localhost:3003/remoteEntry.js"
             },
             shared: { react: { singleton: true, requiredVersion: '^18.0.0' }, 'react-dom': { singleton: true, requiredVersion: '^18.0.0' } }
         }),

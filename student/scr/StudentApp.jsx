@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import Card from "shared_ui/Card"
+import Button from "shared_ui/Button"
 
 export default function StudentApp() {
     const [notices, setNotices] = useState([])
@@ -11,7 +13,7 @@ export default function StudentApp() {
 
 
     return (
-        <div>
+        <Card>
             <h3>Student Micro Frontend</h3>
             <p>Notice from backend: </p>
             <ul>
@@ -23,7 +25,10 @@ export default function StudentApp() {
                     ))
                 }
             </ul>
-        </div>
+            <Button onClick={() => alert("student get clicked")}>
+                click me
+            </Button>
+        </Card>
     )
 }
 

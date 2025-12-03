@@ -29,7 +29,10 @@ module.exports = {
             name: 'student',
             filename: 'remoteEntry.js',
             exposes: { './StudentApp': './scr/StudentApp' },
-            shared: { react: { singleton: true }, 'react-dom': { singleton: true } }
+            shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
+            remotes: {
+                shared_ui: "shared_ui@http://localhost:3003/remoteEntry.js"
+            }
         }),
         new HtmlWebpackPlugin({ template: './public/index.html' })
     ]

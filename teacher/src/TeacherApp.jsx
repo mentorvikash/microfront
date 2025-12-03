@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import Button from "shared_ui/Button"
+import Card from "shared_ui/Card"
+
 
 function TeacherApp() {
   const [classes, setClasses] = useState([])
@@ -12,7 +15,7 @@ function TeacherApp() {
   }, [])
 
   return (
-    <div>
+    <Card>
       <h1>
         Teacher Micro Service
       </h1>
@@ -20,7 +23,10 @@ function TeacherApp() {
       <ul>
         {classes.map((c, i) => <li key={i} >{c.name}</li>)}
       </ul>
-    </div>
+      <Button onClick={() => alert("teacher clicked by")} >
+        Press Me
+      </Button>
+    </Card>
   )
 }
 

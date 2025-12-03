@@ -19,11 +19,12 @@ A modern microfrontend application built with React, Webpack Module Federation, 
 
 ## 🎯 Overview
 
-This project implements a microfrontend architecture for a High School management system with three main frontend applications:
+This project implements a microfrontend architecture for a High School management system with four main frontend applications:
 
 - **Shell**: The host application that orchestrates and loads remote microfrontends
 - **Student**: A microfrontend for student-related features
 - **Teacher**: A microfrontend for teacher-related features
+- **Shared UI**: A shared component library that provides reusable UI components (Button, Card)
 
 The backend consists of two microservices:
 - **Auth Service**: Handles authentication
@@ -39,18 +40,21 @@ The backend consists of two microservices:
 │  │  Dynamically loads remote microfrontends:        │  │
 │  │  - student@localhost:3001                        │  │
 │  │  - teacher@localhost:3002                        │  │
+│  │  - shared_ui@localhost:3003                      │  │
 │  └──────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘
-         │                    │
-         ▼                    ▼
-┌─────────────────┐  ┌─────────────────┐
-│  Student App    │  │  Teacher App    │
-│  Port: 3001     │  │  Port: 3002     │
-│  Exposes:       │  │  Exposes:       │
-│  StudentApp     │  │  TeacherApp     │
-└─────────────────┘  └─────────────────┘
-         │                    │
-         └──────────┬──────────┘
+         │                    │                    │
+         ▼                    ▼                    ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  Student App    │  │  Teacher App    │  │  Shared UI      │
+│  Port: 3001     │  │  Port: 3002     │  │  Port: 3003     │
+│  Exposes:       │  │  Exposes:       │  │  Exposes:       │
+│  StudentApp     │  │  TeacherApp     │  │  Button, Card   │
+│  Uses:          │  │  Uses:          │  │                 │
+│  shared_ui      │  │  shared_ui      │  │                 │
+└─────────────────┘  └─────────────────┘  └─────────────────┘
+         │                    │                    │
+         └──────────┬──────────┴────────────────────┘
                     ▼
          ┌─────────────────────┐
          │   Backend Services  │
@@ -91,18 +95,29 @@ microfront/
 │   ├── public/
 │   │   └── index.html
 │   ├── webpack.config.js
+│   ├── .babelrc             # Babel configuration
 │   └── package.json
 │
-├── backend/
-│   ├── auth-service/         # Authentication service
-│   │   ├── index.js
-│   │   └── package.json
-│   └── data-service/         # Data service (notices & classes)
-│       ├── index.js
-│       └── package.json
+├── shared-ui/               # Shared UI component library (Remote)
+│   ├── components/
+│   │   ├── Button.jsx       # Shared Button component
+│   │   └── Card.jsx         # Shared Card component
+│   ├── src/
+│   │   ├── bootstrap.jsx
+│   │   └── index.jsx
+│   ├── public/
+│   │   └── index.html
+│   ├── webpack.config.js
+│   ├── .babelrc             # Babel configuration
+│   └── package.json
 │
-└── shared-ui/               # Shared UI components (if any)
-    └── package.json
+└── backend/
+    ├── auth-service/         # Authentication service
+    │   ├── index.js
+    │   └── package.json
+    └── data-service/         # Data service (notices & classes)
+        ├── index.js
+        └── package.json
 ```
 
 ## 🔧 Prerequisites
@@ -135,6 +150,11 @@ Before you begin, ensure you have the following installed:
    npm install
    cd ..
 
+   # Install shared-ui dependencies
+   cd shared-ui
+   npm install
+   cd ..
+
    # Install backend services dependencies
    cd backend/auth-service
    npm install
@@ -145,7 +165,7 @@ Before you begin, ensure you have the following installed:
 
 ## 🚀 Running the Application
 
-The application consists of 5 services that need to run simultaneously. You'll need to open **5 separate terminal windows/tabs**.
+The application consists of 6 services that need to run simultaneously. You'll need to open **6 separate terminal windows/tabs**.
 
 ### Terminal 1: Shell (Host Application)
 ```bash
@@ -168,14 +188,21 @@ npm start
 ```
 Teacher app will be available at: **http://localhost:3002**
 
-### Terminal 4: Auth Service
+### Terminal 4: Shared UI Component Library
+```bash
+cd shared-ui
+npm start
+```
+Shared UI will be available at: **http://localhost:3003**
+
+### Terminal 5: Auth Service
 ```bash
 cd backend/auth-service
 npm start
 ```
 Auth service will be available at: **http://localhost:4000**
 
-### Terminal 5: Data Service
+### Terminal 6: Data Service
 ```bash
 cd backend/data-service
 npm start
@@ -198,6 +225,7 @@ The shell application will automatically load the Student and Teacher microfront
 | Shell | 3000 | Host application |
 | Student | 3001 | Student microfrontend |
 | Teacher | 3002 | Teacher microfrontend |
+| Shared UI | 3003 | Shared component library (Button, Card) |
 | Auth Service | 4000 | Authentication API |
 | Data Service | 4001 | Data API (notices & classes) |
 
@@ -225,26 +253,38 @@ This project uses **Webpack Module Federation** to enable runtime integration of
 - **Remotes**: 
   - `student@http://localhost:3001/remoteEntry.js`
   - `teacher@http://localhost:3002/remoteEntry.js`
+  - `shared_ui@http://localhost:3003/remoteEntry.js`
 - **Shared**: React and React-DOM (singleton mode)
 
 ### Student Configuration (Remote)
 - **Name**: `student`
 - **Exposes**: `./StudentApp` → `./scr/StudentApp`
 - **Filename**: `remoteEntry.js`
+- **Remotes**: `shared_ui@http://localhost:3003/remoteEntry.js`
 - **Shared**: React and React-DOM
 
 ### Teacher Configuration (Remote)
 - **Name**: `teacher`
 - **Exposes**: `./TeacherApp` → `./src/TeacherApp.jsx`
 - **Filename**: `remoteEntry.js`
+- **Remotes**: `shared_ui@http://localhost:3003/remoteEntry.js`
 - **Shared**: React and React-DOM
+
+### Shared UI Configuration (Remote)
+- **Name**: `shared_ui`
+- **Exposes**: 
+  - `./Button` → `./components/Button.jsx`
+  - `./Card` → `./components/Card.jsx`
+- **Filename**: `remoteEntry.js`
+- **Shared**: React and React-DOM (singleton mode)
 
 ### How It Works
 
 1. The **shell** application loads at runtime
-2. It dynamically imports remote modules from student and teacher apps
-3. React components are shared as singletons to avoid version conflicts
-4. Each microfrontend can be developed, built, and deployed independently
+2. It dynamically imports remote modules from student, teacher, and shared-ui apps
+3. **Student** and **Teacher** apps consume shared UI components (Button, Card) from the shared-ui remote
+4. React components are shared as singletons to avoid version conflicts
+5. Each microfrontend can be developed, built, and deployed independently
 
 ## 📡 API Endpoints
 
@@ -304,6 +344,10 @@ npm run build
 # Build teacher
 cd teacher
 npm run build
+
+# Build shared-ui
+cd shared-ui
+npm run build
 ```
 
 ### Development Workflow
@@ -316,9 +360,22 @@ npm run build
 ### Key Files
 
 - **webpack.config.js**: Module Federation configuration
+- **.babelrc**: Babel configuration for JSX/ES6+ transpilation (required for all React apps)
 - **bootstrap.jsx**: Application initialization
 - **index.jsx**: Entry point that loads bootstrap
 - **package.json**: Dependencies and scripts
+
+### Babel Configuration
+
+All React applications require a `.babelrc` file with the following configuration:
+
+```json
+{
+    "presets": ["@babel/preset-react", "@babel/preset-env"]
+}
+```
+
+This enables Babel to transform JSX syntax and modern JavaScript features.
 
 ## 🐛 Troubleshooting
 
@@ -343,8 +400,18 @@ npm run build
    - Module Federation shared config ensures singleton React instance
 
 5. **Port already in use**
-   - Stop any services using the ports (3000, 3001, 3002, 4000, 4001)
+   - Stop any services using the ports (3000, 3001, 3002, 3003, 4000, 4001)
    - Or change port numbers in respective config files
+
+6. **JSX syntax errors**
+   - Ensure `.babelrc` file exists in each React application
+   - Verify `@babel/preset-react` is installed and configured
+   - Check that babel-loader is properly configured in webpack.config.js
+
+7. **Shared UI components not loading**
+   - Ensure shared-ui service is running on port 3003
+   - Verify remote configuration in webpack.config.js points to correct URL
+   - Check browser console for CORS or network errors
 
 ### Student App Note
 
@@ -354,9 +421,11 @@ npm run build
 
 - Each microfrontend can be deployed independently
 - The shell application acts as the orchestrator
-- Shared dependencies (React) are loaded once and reused
+- Shared dependencies (React) are loaded once and reused across all apps
+- The shared-ui library provides reusable components consumed by student and teacher apps
 - All services must be running for the full application to work
 - The application uses lazy loading for better performance
+- Babel configuration (`.babelrc`) is required for all React applications to handle JSX syntax
 
 ## 🔄 Future Enhancements
 
@@ -368,7 +437,9 @@ Potential improvements:
 - Add CI/CD pipeline
 - Implement error boundaries
 - Add loading states and error handling
-- Create shared component library
+- Expand shared component library with more reusable components
+- Add TypeScript support
+- Implement shared state management across microfrontends
 
 ## 📄 License
 

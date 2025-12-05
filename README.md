@@ -75,6 +75,7 @@ microfront/
 │   ├── public/
 │   │   └── index.html
 │   ├── webpack.config.js     # Module Federation config
+│   ├── .babelrc              # Babel configuration
 │   └── package.json
 │
 ├── student/                  # Student microfrontend (Remote)
@@ -82,9 +83,11 @@ microfront/
 │   │   ├── bootstrap.jsx     # Standalone app entry
 │   │   ├── index.jsx
 │   │   └── StudentApp.jsx    # Exposed component
+│   ├── index.jsx             # Entry point (imports bootstrap)
 │   ├── public/
 │   │   └── index.html
 │   ├── webpack.config.js
+│   ├── .babelrc              # Babel configuration
 │   └── package.json
 │
 ├── teacher/                  # Teacher microfrontend (Remote)
@@ -367,7 +370,7 @@ npm run build
 
 ### Babel Configuration
 
-All React applications require a `.babelrc` file with the following configuration:
+All React applications (shell, student, teacher, and shared-ui) require a `.babelrc` file with the following configuration:
 
 ```json
 {
@@ -375,7 +378,7 @@ All React applications require a `.babelrc` file with the following configuratio
 }
 ```
 
-This enables Babel to transform JSX syntax and modern JavaScript features.
+This enables Babel to transform JSX syntax and modern JavaScript features. Each application has its own `.babelrc` file in the root directory.
 
 ## 🐛 Troubleshooting
 
@@ -404,7 +407,7 @@ This enables Babel to transform JSX syntax and modern JavaScript features.
    - Or change port numbers in respective config files
 
 6. **JSX syntax errors**
-   - Ensure `.babelrc` file exists in each React application
+   - Ensure `.babelrc` file exists in each React application (shell, student, teacher, shared-ui)
    - Verify `@babel/preset-react` is installed and configured
    - Check that babel-loader is properly configured in webpack.config.js
 
@@ -425,7 +428,8 @@ This enables Babel to transform JSX syntax and modern JavaScript features.
 - The shared-ui library provides reusable components consumed by student and teacher apps
 - All services must be running for the full application to work
 - The application uses lazy loading for better performance
-- Babel configuration (`.babelrc`) is required for all React applications to handle JSX syntax
+- Babel configuration (`.babelrc`) is required for all React applications (shell, student, teacher, shared-ui) to handle JSX syntax
+- The student app has an `index.jsx` file at the root level that imports the bootstrap file from the `scr` folder
 
 ## 🔄 Future Enhancements
 
